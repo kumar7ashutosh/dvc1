@@ -1,0 +1,84 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/di.py
+    deps:
+    - path: src/di.py
+      hash: md5
+      md5: 3988d915c876053601b9346d06e85717
+      size: 1751
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 1a287d34dc172d9f950c03dae35f7e73.dir
+      size: 484846
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/dp.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 1a287d34dc172d9f950c03dae35f7e73.dir
+      size: 484846
+      nfiles: 2
+    - path: src/di.py
+      hash: md5
+      md5: 3988d915c876053601b9346d06e85717
+      size: 1751
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: ee12d0398714c5827837a4e0f5a93c87.dir
+      size: 267163
+      nfiles: 2
+  feature_engineering:
+    cmd: python src/fe.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: ee12d0398714c5827837a4e0f5a93c87.dir
+      size: 267163
+      nfiles: 2
+    - path: src/fe.py
+      hash: md5
+      md5: ebe08d3e093a4701c1eff6f1330c455f
+      size: 2100
+    outs:
+    - path: data/transformed
+      hash: md5
+      md5: 677f96a54403221162c9d77f891300a0.dir
+      size: 10846210
+      nfiles: 2
+  model_training:
+    cmd: python src/mt.py
+    deps:
+    - path: data/transformed
+      hash: md5
+      md5: 677f96a54403221162c9d77f891300a0.dir
+      size: 10846210
+      nfiles: 2
+    - path: src/mt.py
+      hash: md5
+      md5: 7498bd6f1a584a326c88409b2678e9e6
+      size: 1722
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: d794e360e9af9cd089d050d101da89a3
+      size: 1617921
+  model_evaluation:
+    cmd: python src/me.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: d794e360e9af9cd089d050d101da89a3
+      size: 1617921
+    - path: src/me.py
+      hash: md5
+      md5: bac15a12253b08fd866258e95512850d
+      size: 2065
+    outs:
+    - path: report/metrics.json
+      hash: md5
+      md5: a494faea4b9fc578bf6968af78bdb718
+      size: 144

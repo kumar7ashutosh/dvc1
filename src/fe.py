@@ -55,7 +55,7 @@ def main():
     test_df=load_data(r'data\processed\new_test.csv')
     train_df,test_df=apply_tfidf(train_df,test_df)
     save_data(train_df,os.path.join('data','transformed','train_tfidf.csv'))
-    save_data(test_df,os.path.join('data','transformed','test_tfdif.csv'))
+    save_data(test_df,os.path.join('data','transformed','test_tfidf.csv'))
     
 if __name__=='__main__':
     main()
