@@ -29,7 +29,6 @@ def load_data(data_url:str)->pd.DataFrame:
 
 def preprocess_data(df:pd.DataFrame)->pd.DataFrame:
     df=df.drop(columns=['Unnamed: 2','Unnamed: 3','Unnamed: 4'],axis=1)
-    df=df.drop_duplicates(keep='first')
     df.rename(columns={'v1':'target','v2':'text'},inplace=True)
     logger.debug('data preprocessing completed')
     return df
