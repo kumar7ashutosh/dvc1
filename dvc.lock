@@ -5,8 +5,11 @@ stages:
     deps:
     - path: src/di.py
       hash: md5
-      md5: 3988d915c876053601b9346d06e85717
-      size: 1751
+      md5: da8a97ef3502201860e73e4867c4eb75
+      size: 1987
+    params:
+      params.yaml:
+        data_ingestion.test_size: 0.2
     outs:
     - path: data/raw
       hash: md5
@@ -23,8 +26,8 @@ stages:
       nfiles: 2
     - path: src/di.py
       hash: md5
-      md5: 3988d915c876053601b9346d06e85717
-      size: 1751
+      md5: da8a97ef3502201860e73e4867c4eb75
+      size: 1987
     outs:
     - path: data/processed
       hash: md5
@@ -41,44 +44,51 @@ stages:
       nfiles: 2
     - path: src/fe.py
       hash: md5
-      md5: ebe08d3e093a4701c1eff6f1330c455f
-      size: 2100
+      md5: 3358b3398abe41d8bd41272299a4839d
+      size: 2400
+    params:
+      params.yaml:
+        feature_engineering.max_features: 35
     outs:
     - path: data/transformed
       hash: md5
-      md5: 677f96a54403221162c9d77f891300a0.dir
-      size: 10846210
+      md5: ffae1787b945fe530699228fa57fe14a.dir
+      size: 819306
       nfiles: 2
   model_training:
     cmd: python src/mt.py
     deps:
     - path: data/transformed
       hash: md5
-      md5: 677f96a54403221162c9d77f891300a0.dir
-      size: 10846210
+      md5: ffae1787b945fe530699228fa57fe14a.dir
+      size: 819306
       nfiles: 2
     - path: src/mt.py
       hash: md5
-      md5: 7498bd6f1a584a326c88409b2678e9e6
-      size: 1722
+      md5: 9c3a8295f845b8868cefd3f87c765b2b
+      size: 2051
+    params:
+      params.yaml:
+        model_training.n_estimators: 20
+        model_training.random_state: 2
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: d794e360e9af9cd089d050d101da89a3
-      size: 1617921
+      md5: db601affa16c1363a6d4b7a992361fd5
+      size: 609924
   model_evaluation:
     cmd: python src/me.py
     deps:
     - path: models/model.pkl
       hash: md5
-      md5: d794e360e9af9cd089d050d101da89a3
-      size: 1617921
+      md5: db601affa16c1363a6d4b7a992361fd5
+      size: 609924
     - path: src/me.py
       hash: md5
-      md5: bac15a12253b08fd866258e95512850d
-      size: 2065
+      md5: 673f77c994b02d895ec1e2bdc08ee955
+      size: 2592
     outs:
     - path: report/metrics.json
       hash: md5
-      md5: a494faea4b9fc578bf6968af78bdb718
-      size: 144
+      md5: 6d0d6b4623e5934f054bfe03a929d5f2
+      size: 146
