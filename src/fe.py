@@ -1,4 +1,4 @@
-import numpy as np, pandas as pd,logging,os
+import numpy as np, pandas as pd,logging,os,yaml
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 log_dir='logs'
@@ -20,14 +20,19 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(params_path:str)->dict:
+    with open(params_path,'r') as file:
+        params=yaml.safe_load(file)
+    return params
+
 def load_data(data_path:str)->pd.DataFrame:
     df=pd.read_csv(data_path)
     df.fillna('',inplace=True)
     logger.debug('data added from %s',data_path)
     return df
 
-def apply_tfidf(train_data:pd.DataFrame,test_data:pd.DataFrame)->tuple:
-    vectorizer=TfidfVectorizer(max_features=500)
+def apply_tfidf(train_data:pd.DataFrame,test_data:pd.DataFrame,max_features:int)->tuple:
+    vectorizer=TfidfVectorizer(max_features=max_features)
     x_train=train_data['text'].values
     y_train=train_data['target'].values
     x_test=test_data['text'].values
@@ -51,9 +56,11 @@ def save_data(df:pd.DataFrame,data_path:str)->None:
     logger.debug('transformed data saved at %s', data_path)
 
 def main():
+    params=load_params('params.yaml')
+    max_features=params['feature_engineering']['max_features']
     train_df=load_data(r'data\processed\new_train.csv')
     test_df=load_data(r'data\processed\new_test.csv')
-    train_df,test_df=apply_tfidf(train_df,test_df)
+    train_df,test_df=apply_tfidf(train_df,test_df,max_features=max_features)
     save_data(train_df,os.path.join('data','transformed','train_tfidf.csv'))
     save_data(test_df,os.path.join('data','transformed','test_tfidf.csv'))
     

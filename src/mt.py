@@ -1,4 +1,4 @@
-import numpy as np, pandas as pd,logging,os,pickle
+import numpy as np, pandas as pd,logging,os,pickle,yaml
 from sklearn.ensemble import RandomForestClassifier
 
 log_dir='logs'
@@ -20,6 +20,11 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(params_path:str)->dict:
+    with open(params_path,'r') as file:
+        params=yaml.safe_load(file)
+    return params
+
 def load_data(data_path:str)->pd.DataFrame:
     df=pd.read_csv(data_path)
     df.fillna('',inplace=True)
@@ -27,9 +32,13 @@ def load_data(data_path:str)->pd.DataFrame:
     return df
 
 def train_model(x_train:np.ndarray,y_train:np.ndarray)->RandomForestClassifier:
+    
+    params=load_params('params.yaml')
+    n_estimators=params['model_training']['n_estimators']
+    random_state=params['model_training']['random_state']
     if x_train.shape[0]!=y_train.shape[0]:
         print("x_train & y_train aren't of same size")
-    rfc=RandomForestClassifier(n_estimators=22,random_state=2)
+    rfc=RandomForestClassifier(n_estimators=n_estimators,random_state=random_state)
     rfc.fit(x_train,y_train)
     logger.debug('model training completed')
     return rfc
