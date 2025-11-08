@@ -1,3 +1,4 @@
+
 import os,pandas as pd,logging,yaml
 from sklearn.model_selection import train_test_split
 
@@ -40,7 +41,7 @@ def save_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_path:str)->Non
     test_data.to_csv(os.path.join(raw_data_path,'test.csv'),index=False)
 
 def main():
-    data_path=""
+    data_path="https://raw.githubusercontent.com/kumar7ashutosh/datasets/main/spam.csv"
     df=load_data(data_path)
     final_df=preprocess_data(df)
     train_data,test_data=train_test_split(final_df,test_size=0.2,random_state=2)
